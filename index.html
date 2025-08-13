@@ -7,9 +7,9 @@
     
 	<!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <!-- <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"> -->
+    <!-- <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"> -->
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"> -->
 	
     <!-- Fuentes modernas desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
@@ -139,6 +139,79 @@
             font-weight: 700;
             display: inline-block;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+			cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .age-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .age-badge:active {
+            transform: scale(0.95);
+        }
+
+        /* Confeti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .confetti.heart::before {
+            content: '💖';
+            font-size: 12px;
+            width: auto;
+            height: auto;
+        }
+
+        .confetti.bow::before {
+            content: '🎀';
+            font-size: 12px;
+            width: auto;
+            height: auto;
+        }
+
+        .confetti.star::before {
+            content: '✨';
+            font-size: 10px;
+            width: auto;
+            height: auto;
+        }
+
+        .confetti.circle::before {
+            background: var(--pink-primary);
+        }
+
+        .confetti.circle.pink-light::before {
+            background: var(--pink-light);
+        }
+
+        .confetti.circle.pink-dark::before {
+            background: var(--pink-dark);
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
 
         /* Imagen Minnie */
@@ -147,12 +220,11 @@
             padding: 30px 20px;
             background: linear-gradient(180deg, var(--pink-soft), var(--white));
         }
-
-        .minnie-img {
+		
+		.minnie-img {
             width: min(200px, 60vw);
             height: auto;
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(214, 51, 132, 0.2);
             animation: float 4s ease-in-out infinite;
             transition: transform 0.3s ease;
         }
@@ -341,12 +413,12 @@
         <div class="header">
             <h1>¡Estás invitado!</h1>
             <h2>Cumpleaños de Amelia</h2>
-            <div class="age-badge">¡Mis 5 añitos! 🎉</div>
+            <div class="age-badge" onclick="launchConfetti()">¡Mis 5 añitos! 🎉</div>
         </div>
 
         <!-- Imagen Minnie -->
         <div class="minnie-container">
-            <img src="assets/minnie.jpg" alt="Minnie Rosa" class="minnie-img">
+            <img src="assets/minnie.png" alt="Minnie Rosa" class="minnie-img">
         </div>
 
         <!-- Información del evento -->
@@ -476,7 +548,58 @@
                 heart.style.transform += ` translateY(${scrolled * speed}px)`;
             });
         });
+		   
+		// Función de confeti 🎉
+        function launchConfetti() {
+            //console.log('¡Confeti activado!');
+            
+            const confettiCount = 50;
+            const colors = ['circle', 'heart', 'bow', 'star'];
+            const colorClasses = ['', 'pink-light', 'pink-dark'];
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Tipo de confeti aleatorio
+                const type = colors[Math.floor(Math.random() * colors.length)];
+                confetti.classList.add(type);
+                
+                // Color aleatorio para círculos
+                if (type === 'circle') {
+                    const colorClass = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+                    if (colorClass) confetti.classList.add(colorClass);
+                }
+                
+                // Posición inicial aleatoria
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-20px';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                confetti.style.animation = `confetti-fall ${confetti.style.animationDuration} ${confetti.style.animationDelay} ease-out forwards`;
+                
+                document.body.appendChild(confetti);
+                
+                // Limpiar confeti después de la animación
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 6000);
+            }
+
+            // Vibración en móvil (si está soportada)
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+
+            // Efecto de rebote en el badge
+            const badge = document.querySelector('.age-badge');
+            badge.style.animation = 'bounce 0.6s ease-in-out';
+            setTimeout(() => {
+                badge.style.animation = '';
+            }, 600);
+        }						   
     </script>
 </body>
-
 </html>
