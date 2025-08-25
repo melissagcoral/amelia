@@ -416,7 +416,7 @@
         <!-- Header -->
         <div class="header">
             <h1>Hola, soy Amelia</h1>
-            <h2>Estoy emocionada de poder celebrar contigo </h2>
+            <h2>y estoy contenta de celebrar </h2>
             <div class="age-badge" onclick="launchConfetti()">¡Mis 5 añitos! 🎉</div>
         </div>
 
@@ -428,6 +428,7 @@
         <!-- Información del evento -->
         <div class="section">
             <h3>🎈 Te espero para compartir junto a mi familia y amiguitos</h3>
+            <br>
             <h3>Será una hermosa tarde y no puedes faltar</h3>
             <div class="event-info">
                 <div class="info-item">
@@ -487,8 +488,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>¡No te pierdas esta dulce celebración! 🎂✨</p>
-            <p>¡Nos vemos pronto para soplar las velitas juntos! ✨</p>
+            <p>¡Nos vemos pronto para apagar las velitas juntos! 🎂✨</p>
             <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Con amor, la familia de Amelia 💕</p>
         </div>
     </div>
@@ -558,7 +558,7 @@
 		   
 		// Función de confeti 🎉
         function launchConfetti() {
-            //console.log('¡Confeti activado!');
+            autoPlayMusic();
             
             const confettiCount = 50;
             const colors = ['circle', 'heart', 'bow', 'star'];
@@ -606,7 +606,22 @@
             setTimeout(() => {
                 badge.style.animation = '';
             }, 600);
-        }						   
+        }
+
+        function autoPlayMusic() {
+            const music = document.getElementById("bgMusic");
+            const toggleBtn = document.getElementById("musicToggle");
+
+            if (music.paused) {
+                music.play().then(() => {
+                    toggleBtn.textContent = "⏸️ Pausar música";
+                    toggleBtn.style.background = "#ff1493";
+                }).catch((err) => {
+                    console.log("Autoplay bloqueado:", err);
+                });
+            }
+        }
+						   
     </script>
 </body>
 </html>
